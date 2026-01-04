@@ -4,19 +4,24 @@ const modalMenu = document.getElementById('modalMenu');
 const closeMenu = document.getElementById('closeMenu');
 const backToTop = document.getElementById('backToTop');
 const navLinks = document.querySelectorAll('.nav-link[data-close="true"]');
-const body = document.body;
 
 // Открытие/закрытие модального меню
 function toggleMenu() {
     const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-    menuToggle.setAttribute('aria-expanded', !isExpanded);
-    modalMenu.classList.toggle('active');
     
-    // Добавляем/убираем класс для body
+    // Переключаем состояние меню
     if (!isExpanded) {
-        body.classList.add('menu-open');
+        // Открываем меню
+        menuToggle.setAttribute('aria-expanded', 'true');
+        modalMenu.classList.add('active');
+        // Блокируем скролл основного контента
+        document.documentElement.style.overflow = 'hidden';
     } else {
-        body.classList.remove('menu-open');
+        // Закрываем меню
+        menuToggle.setAttribute('aria-expanded', 'false');
+        modalMenu.classList.remove('active');
+        // Восстанавливаем скролл
+        document.documentElement.style.overflow = '';
     }
 }
 
@@ -24,7 +29,7 @@ function toggleMenu() {
 function closeModalMenu() {
     menuToggle.setAttribute('aria-expanded', 'false');
     modalMenu.classList.remove('active');
-    body.classList.remove('menu-open');
+    document.documentElement.style.overflow = '';
 }
 
 // Показать/скрыть кнопку "Наверх"
@@ -56,9 +61,9 @@ closeMenu.addEventListener('click', closeModalMenu);
 
 // Закрытие меню при клике на ссылку
 navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', function(e) {
         e.preventDefault();
-        const target = link.getAttribute('href');
+        const target = this.getAttribute('href');
         
         // Закрываем меню
         closeModalMenu();
@@ -66,7 +71,7 @@ navLinks.forEach(link => {
         // Ждем завершения анимации закрытия меню
         setTimeout(() => {
             smoothScroll(target);
-        }, 400); // Время должно совпадать с transition в CSS
+        }, 300);
     });
 });
 
@@ -78,10 +83,10 @@ backToTop.addEventListener('click', () => {
     });
 });
 
-// Закрытие меню при клике на оверлей (левая часть)
-modalMenu.addEventListener('click', (e) => {
-    // Закрываем только если кликнули на оверлей (не на само меню)
-    if (e.target.classList.contains('modal-menu')) {
+// Закрытие меню при клике вне меню (на левую часть экрана)
+modalMenu.addEventListener('click', function(e) {
+    // Закрываем только если кликнули на само модальное окно, а не на его содержимое
+    if (e.target === this) {
         closeModalMenu();
     }
 });
@@ -109,46 +114,62 @@ window.addEventListener('scroll', toggleBackToTop);
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', () => {
+    // Инициализируем кнопку "Наверх"
     toggleBackToTop();
     
-    // Добавляем индикатор текущей страницы в меню
-    const currentPage = window.location.hash || '#hero';
-    navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
-            link.style.color = 'var(--color-gold)';
+    // Устанавливаем начальное состояние меню
+    menuToggle.setAttribute('aria-expanded', 'false');
+    modalMenu.classList.remove('active');
+    
+    // Анимация появления карточек при загрузке
+    setTimeout(() => {
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        });
+    }, 100);
+});
+
+// Дополнительно: плавный скролл для всех якорных ссылок
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        // Пропускаем ссылки, которые уже обрабатываются
+        if (this.getAttribute('data-close') === 'true') return;
+        
+        e.preventDefault();
+        const target = this.getAttribute('href');
+        if (target === '#') return;
+        
+        const element = document.querySelector(target);
+        if (element) {
+            const headerHeight = document.querySelector('.header').offsetHeight;
+            const targetPosition = element.offsetTop - headerHeight - 20;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
         }
     });
-    
-    // Анимация появления элементов при скролле
-    const animateOnScroll = () => {
-        const elements = document.querySelectorAll('.product-card');
-        const windowHeight = window.innerHeight;
-        const windowTop = window.scrollY;
-        const windowBottom = windowTop + windowHeight;
-        
-        elements.forEach(element => {
-            const elementTop = element.offsetTop;
-            const elementBottom = elementTop + element.offsetHeight;
-            
-            // Проверяем, виден ли элемент
-            if (elementBottom >= windowTop && elementTop <= windowBottom) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }
-        });
-    };
-    
-    // Инициализируем начальные стили для анимации
-    document.querySelectorAll('.product-card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    });
-    
-    // Запускаем анимацию при скролле
-    window.addEventListener('scroll', animateOnScroll);
-    
-    // Запускаем сразу для видимых элементов
-    setTimeout(animateOnScroll, 100);
 });
+
+// Улучшение: добавляем анимацию появления при скролле
+const animateOnScroll = () => {
+    const elements = document.querySelectorAll('.product-card');
+    const windowHeight = window.innerHeight;
+    
+    elements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        
+        if (elementTop < windowHeight - 100) {
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        }
+    });
+};
+
+// Запускаем анимацию при скролле
+window.addEventListener('scroll', animateOnScroll);
+
+// Запускаем сразу для видимых элементов
+setTimeout(animateOnScroll, 100);
