@@ -1,1 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мастерская церковных куполов | Изготовление и установка</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Кнопка "Наверх" -->
+    <button id="backToTop" class="back-to-top" aria-label="Вернуться наверх">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
+    <!-- Навигация -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Логотип как кнопка на главную -->
+                <a href="#hero" class="logo-link">
+                    <div class="logo">
+                        <img src="images/logo.svg" alt="Логотип Мастерской церковных куполов" class="logo-img">
+                        <span class="logo-text">Мастерская куполов</span>
+                    </div>
+                </a>
+
+                <!-- Кнопка меню -->
+                <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false">
+                    <span class="hamburger">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Модальное меню -->
+    <nav class="modal-menu" id="modalMenu" aria-hidden="true">
+        <div class="modal-menu-content">
+            <button class="close-menu" id="closeMenu" aria-label="Закрыть меню">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <ul class="modal-nav">
+                <li><a href="#hero" class="nav-link" data-close="true">Главная</a></li>
+                <li><a href="#services" class="nav-link" data-close="true">Услуги</a></li>
+                <li><a href="#portfolio" class="nav-link" data-close="true">Портфолио</a></li>
+                <li><a href="#about" class="nav-link" data-close="true">О нас</a></li>
+                <li><a href="#contacts" class="nav-link" data-close="true">Контакты</a></li>
+            </ul>
+
+            <div class="menu-footer">
+                <!-- Пустой блок для навигации (вы заполните позже) -->
+                <div class="empty-nav-section" style="height: 100px;"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Главный экран -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-subtitle">Искусство, обращённое к небу</span>
+                    Церковные купола<br>и медная кровля
+                </h1>
+                <p class="hero-description">
+                    Изготовление, позолота и установка куполов для храмов.<br>
+                    Медная кровля для церквей и исторических зданий.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#services" class="btn btn-gold">Наши услуги</a>
+                    <a href="#contacts" class="btn btn-outline">Связаться с нами</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Декоративные элементы -->
+        <div class="hero-decoration">
+            <div class="decoration-circle circle-1"></div>
+            <div class="decoration-circle circle-2"></div>
+            <div class="decoration-cross"></div>
+        </div>
+    </section>
+
+    <!-- Услуги как продукты -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Наши услуги</h2>
+            <p class="section-subtitle">Качество и традиции в каждом проекте</p>
+            
+            <div class="products-grid">
+                <!-- Продукт 1: Купола -->
+                <article class="product-card">
+                    <div class="product-image">
+                        <!-- Замените на свою картинку -->
+                        <img src="images/dom.jpg" alt="Церковный купол с позолотой" class="product-img">
+                        <div class="price-badge">
+                            <span class="price-from">от</span>
+                            <span class="price">90 000 ₽</span>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Церковные купола</h3>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Собственное производство</li>
+                            <li><i class="fas fa-check-circle"></i> Позолота сусальным золотом</li>
+                            <li><i class="fas fa-check-circle"></i> Установка под ключ</li>
+                            <li><i class="fas fa-check-circle"></i> Гарантия до 25 лет</li>
+                        </ul>
+                        <a href="uslugi/kupola.html" class="btn btn-copper btn-details">
+                            <span>Подробнее</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Продукт 2: Кровля -->
+                <article class="product-card">
+                    <div class="product-image">
+                        <!-- Замените на свою картинку -->
+                        <img src="images/krovlya.jpg" alt="Медная кровля церкви" class="product-img">
+                        <div class="price-badge">
+                            <span class="price-from">от</span>
+                            <span class="price">20 000 ₽</span>
+                            <span class="price-unit">/м²</span>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Медная кровля</h3>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Фальцевая технология</li>
+                            <li><i class="fas fa-check-circle"></i> Медь 0.6-0.8 мм</li>
+                            <li><i class="fas fa-check-circle"></i> Сложные архитектурные формы</li>
+                            <li><i class="fas fa-check-circle"></i> Срок службы 100+ лет</li>
+                        </ul>
+                        <a href="uslugi/krovlya.html" class="btn btn-copper btn-details">
+                            <span>Подробнее</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Продукт 3: Кресты -->
+                <article class="product-card">
+                    <div class="product-image">
+                        <!-- Заглушка для изображения -->
+                        <div class="img-placeholder">
+                            <i class="fas fa-cross"></i>
+                            <span>Изображение появится позже</span>
+                        </div>
+                        <div class="price-badge">
+                            <span class="price-from">от</span>
+                            <span class="price">35 000 ₽</span>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">Храмозданные кресты</h3>
+                        <ul class="product-features">
+                            <li><i class="fas fa-check-circle"></i> Кованые и литые</li>
+                            <li><i class="fas fa-check-circle"></i> Позолота и патинирование</li>
+                            <li><i class="fas fa-check-circle"></i> Проектирование по канонам</li>
+                            <li><i class="fas fa-check-circle"></i> Установка любой сложности</li>
+                        </ul>
+                        <a href="uslugi/kresty.html" class="btn btn-copper btn-details">
+                            <span>Подробнее</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Блок с текстом внизу -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Мастерская церковных куполов</h3>
+                    <p>Изготовление, реставрация и установка куполов, крестов и медной кровли для храмов и исторических зданий.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul class="footer-contacts">
+                        <li><i class="fas fa-phone"></i> <a href="tel:+79991234567">+7 (999) 123-45-67</a></li>
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:info@kupola.ru">info@kupola.ru</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> г. Москва, ул. Храмовая, 15</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Помощь</h3>
+                    <ul class="footer-help">
+                        <li><a href="#">Как заказать</a></li>
+                        <li><a href="#">Оплата и доставка</a></li>
+                        <li><a href="#">Гарантия</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Мастерская церковных куполов. Все права защищены.</p>
+                <p>Сайт создан с молитвой и заботой о каждом проекте.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
