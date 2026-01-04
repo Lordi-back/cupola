@@ -4,20 +4,27 @@ const modalMenu = document.getElementById('modalMenu');
 const closeMenu = document.getElementById('closeMenu');
 const backToTop = document.getElementById('backToTop');
 const navLinks = document.querySelectorAll('.nav-link[data-close="true"]');
+const body = document.body;
 
 // Открытие/закрытие модального меню
 function toggleMenu() {
     const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
     menuToggle.setAttribute('aria-expanded', !isExpanded);
     modalMenu.classList.toggle('active');
-    document.body.style.overflow = !isExpanded ? 'hidden' : 'auto';
+    
+    // Добавляем/убираем класс для body
+    if (!isExpanded) {
+        body.classList.add('menu-open');
+    } else {
+        body.classList.remove('menu-open');
+    }
 }
 
 // Закрытие меню
 function closeModalMenu() {
     menuToggle.setAttribute('aria-expanded', 'false');
     modalMenu.classList.remove('active');
-    document.body.style.overflow = 'auto';
+    body.classList.remove('menu-open');
 }
 
 // Показать/скрыть кнопку "Наверх"
@@ -29,12 +36,15 @@ function toggleBackToTop() {
     }
 }
 
-// Плавная прокрутка
+// Плавная прокрутка с учетом шапки
 function smoothScroll(target) {
     const element = document.querySelector(target);
     if (element) {
+        const headerHeight = document.querySelector('.header').offsetHeight;
+        const targetPosition = element.offsetTop - headerHeight - 20;
+        
         window.scrollTo({
-            top: element.offsetTop - 80,
+            top: targetPosition,
             behavior: 'smooth'
         });
     }
@@ -49,12 +59,14 @@ navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         const target = link.getAttribute('href');
+        
+        // Закрываем меню
         closeModalMenu();
         
-        // Небольшая задержка для закрытия меню перед скроллом
+        // Ждем завершения анимации закрытия меню
         setTimeout(() => {
             smoothScroll(target);
-        }, 300);
+        }, 400); // Время должно совпадать с transition в CSS
     });
 });
 
@@ -66,9 +78,10 @@ backToTop.addEventListener('click', () => {
     });
 });
 
-// Закрытие меню при клике вне его области
+// Закрытие меню при клике на оверлей (левая часть)
 modalMenu.addEventListener('click', (e) => {
-    if (e.target === modalMenu) {
+    // Закрываем только если кликнули на оверлей (не на само меню)
+    if (e.target.classList.contains('modal-menu')) {
         closeModalMenu();
     }
 });
@@ -80,34 +93,62 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Отслеживание скролла
+// Закрытие меню при изменении размера окна (адаптив)
+let resizeTimer;
+window.addEventListener('resize', () => {
+    if (modalMenu.classList.contains('active')) {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            closeModalMenu();
+        }, 250);
+    }
+});
+
+// Отслеживание скролла для кнопки "Наверх"
 window.addEventListener('scroll', toggleBackToTop);
 
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', () => {
     toggleBackToTop();
     
-    // Предзагрузка шрифтов (опционально)
-    document.fonts.ready.then(() => {
-        document.body.classList.add('fonts-loaded');
-    });
-});
-
-// Анимация при скролле (можно добавить AOS позже)
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animated');
+    // Добавляем индикатор текущей страницы в меню
+    const currentPage = window.location.hash || '#hero';
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+            link.style.color = 'var(--color-gold)';
         }
     });
-}, observerOptions);
-
-// Наблюдаем за продуктами
-document.querySelectorAll('.product-card').forEach(card => {
-    observer.observe(card);
+    
+    // Анимация появления элементов при скролле
+    const animateOnScroll = () => {
+        const elements = document.querySelectorAll('.product-card');
+        const windowHeight = window.innerHeight;
+        const windowTop = window.scrollY;
+        const windowBottom = windowTop + windowHeight;
+        
+        elements.forEach(element => {
+            const elementTop = element.offsetTop;
+            const elementBottom = elementTop + element.offsetHeight;
+            
+            // Проверяем, виден ли элемент
+            if (elementBottom >= windowTop && elementTop <= windowBottom) {
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }
+        });
+    };
+    
+    // Инициализируем начальные стили для анимации
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    });
+    
+    // Запускаем анимацию при скролле
+    window.addEventListener('scroll', animateOnScroll);
+    
+    // Запускаем сразу для видимых элементов
+    setTimeout(animateOnScroll, 100);
 });
